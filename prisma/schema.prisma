@@ -1,0 +1,35 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+model User {
+  id       String @id @default(uuid()) @map("user_id")
+  firstName String @map("first_name")
+  lastName String @map("last_name")
+  username String @unique @map("username")
+  emailAddress String @unique @map("email_address")
+  password String  @map("password")
+  avatarUrl String? @map("avatar_url")
+  dateJoined DateTime @default(now()) @map("date_joined")
+  lastProfileUpdate DateTime @updatedAt @map("last_profile_update")
+  isDeleted Boolean @default(false) @map("is_deleted")
+  tasks Task[]
+  @@map("users")
+}
+model Task {
+  id       String @id @default(uuid()) @map("task_id")
+  title    String @map("task_title")
+  description String @map("task_description")
+  isDeleted Boolean @default(false) @map("is_deleted")
+  isCompleted Boolean @default(false) @map("is_completed")
+  dateCreated DateTime @default(now()) @map("date_created")
+  dateUpdated DateTime @updatedAt @map("date_updated")
+  userId String @map("user_id")
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  @@map("tasks")
+
+}
