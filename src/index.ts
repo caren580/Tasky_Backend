@@ -9,6 +9,7 @@ app.use(express.json());
 app.use(cookieParser());
 
 app.use('/api/auth', authRoutes);
+// 
 
 app.get('/', (req: Request, res: Response) => {
   res.send('<h1>Welcome to Tasky</h1>');
