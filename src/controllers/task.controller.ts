@@ -21,3 +21,26 @@ export const createTask = async (req: Request, res: Response) => {
         res.status(500).json({message: 'Something went wrong'})
     }
 }
+
+export const getAllTasks = async (req: Request, res: Response)=> {
+    try{
+        const tasks = await client.task.findMany({
+            where: {
+                userId: req.user.id,
+                isDeleted: false
+            },
+            include: {
+                user:{
+                    select: {
+                        username: true,
+                    emailAddress: true,
+                    }
+                }
+            }
+        })
+        res.status(200).json({tasks})
+    }catch(e){
+        console.error(e)
+        res.status(500).json({message: 'Something went wrong'})
+    }
+}
