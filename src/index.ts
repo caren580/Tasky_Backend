@@ -2,6 +2,7 @@ import express, {Express, Request, Response } from 'express';
 import cookieParser from "cookie-parser";
 import cors from 'cors';
 import authRoutes from "./routes/auth.route"
+import taskRoutes from "./routes/task.route";
 
 const app: Express = express();
 
@@ -14,8 +15,7 @@ app.use(cors({
   credentials: true, 
 }));
 app.use('/api/auth', authRoutes);
-
-
+app.use('/api/tasks', taskRoutes);
 
 app.get('/', (req: Request, res: Response) => {
   res.send('<h1>Welcome to Tasky</h1>');

@@ -1,0 +1,10 @@
+import { Router } from "express";
+import { createTask } from "../controllers/task.controller";
+import { verifyTaskInput } from "../middlewares/verifyTaskInput";
+import verifyToken from "../middlewares/verifyToken"
+
+const router = Router();
+
+router.post("/", verifyToken, verifyTaskInput, createTask);
+
+export default router;
