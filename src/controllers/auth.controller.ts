@@ -1,7 +1,8 @@
 import { Request, Response, NextFunction } from "express";
 import { PrismaClient } from "@prisma/client";
 import bcrypt from 'bcrypt';
-import jwt from 'jsonwebtoken';
+import jwt from 'jsonwebtoken'
+
 
 const client = new PrismaClient();
 
@@ -55,7 +56,14 @@ export const loginUser= async (req: Request, res: Response, next: NextFunction) 
       ...userInfo
     } = user;
     const token = jwt.sign(userInfo, process.env.JWT_SECRET!);
-    res.status(200).json({ userInfo, token });
+    res.cookie("authToken", token, {
+      httpOnly: true,
+      sameSite: "lax", 
+      secure: false, 
+      maxAge: 7 * 24 * 60 * 60 * 1000, 
+    });
+
+    res.status(200).json({ userInfo });
   } catch (e) {
     console.error(e);
     res.status(500).json({ message: "Something went wrong" });
@@ -63,13 +71,45 @@ export const loginUser= async (req: Request, res: Response, next: NextFunction) 
 };
 
 export const logoutUser = (req: Request, res: Response, next: NextFunction) => {
-    res.clearCookie('AuthToken', {
+    res.clearCookie('AuthToken',{
     httpOnly: true,
     sameSite: "lax",
     secure: process.env.NODE_ENV === "production",
   });
     res.status(200).json({message: "user logged out successfully"})
 }
+
+export const updateUserPassword = async (req: Request, res: Response, next: NextFunction) =>{
+    const { id } = req.user;
+    const { currentPassword, newPassword} = req.body;
+    try{
+        const user = await client.user.findUnique({
+            where: { id }
+
+        })
+        if (!user) {
+            return res.status(404).json({ message: "user not found"});
+        }
+
+    const valid = await bcrypt.compare(currentPassword, user.password);
+    if (!valid) {
+      return res.status(400).json({ message: "Incorrect current password" });
+    }
+
+    const hashed = await bcrypt.hash(newPassword, 10);
+    await client.user.update({
+      where: { id },
+      data: { password: hashed },
+    });
+
+    res.json({ message: "Password updated successfully" });
+  } catch (e) {
+    console.error(e);
+    res.status(500).json({ message: "Failed to update password" });
+  }
+};
+    
+
     
 
 

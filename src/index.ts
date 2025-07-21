@@ -1,5 +1,6 @@
 import express, {Express, Request, Response } from 'express';
 import cookieParser from "cookie-parser";
+import cors from 'cors';
 import authRoutes from "./routes/auth.route"
 
 const app: Express = express();
@@ -8,8 +9,13 @@ const app: Express = express();
 app.use(express.json());
 app.use(cookieParser());
 
+app.use(cors({
+  origin: "http://localhost:3000", 
+  credentials: true, 
+}));
 app.use('/api/auth', authRoutes);
-// 
+
+
 
 app.get('/', (req: Request, res: Response) => {
   res.send('<h1>Welcome to Tasky</h1>');
