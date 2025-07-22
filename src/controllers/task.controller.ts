@@ -44,3 +44,30 @@ export const getAllTasks = async (req: Request, res: Response)=> {
         res.status(500).json({message: 'Something went wrong'})
     }
 }
+
+export const getSpecificTask = async (req: Request, res: Response) =>{
+    const { id: userId } = req.user;
+    const { taskId }= req.params;
+    try{
+        const task = await client.task.findFirst({
+            where: {
+                 id: taskId, userId: userId,
+            },
+            include: {
+                user: {
+                    select: {
+                        username: true,
+                        emailAddress:true
+                    }
+                }
+            }
+        })
+        if(!task){
+            return res.status(404).json({message: "Task not found"})
+        }
+        res.status(200).json({task})
+    }catch(e){
+        console.error(e);
+        res.status(500).json({message: "Something went wrong"})
+    }
+}
