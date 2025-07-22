@@ -3,6 +3,7 @@ import cookieParser from "cookie-parser";
 import cors from 'cors';
 import authRoutes from "./routes/auth.route"
 import taskRoutes from "./routes/task.route";
+import userRoutes from "./routes/user.route";
 
 const app: Express = express();
 
@@ -16,6 +17,7 @@ app.use(cors({
 }));
 app.use('/api/auth', authRoutes);
 app.use('/api/tasks', taskRoutes);
+app.use('/api/user', userRoutes);
 
 app.get('/', (req: Request, res: Response) => {
   res.send('<h1>Welcome to Tasky</h1>');
