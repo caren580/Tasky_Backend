@@ -175,3 +175,25 @@ export const completeTask = async (req: Request, res: Response) => {
         res.status(500).json({message: "Something went wrong"})
     }
 }
+
+export const incompleteTask = async (req: Request, res: Response) => {
+    const { id: userId } = req.user;
+    const { id: taskId } = req.params;
+    try {
+        const incompletedTask = await client.task.update({
+            where: {
+                id: taskId,
+                userId: userId,
+                isDeleted: false
+            },
+            data: {
+                isCompleted: false
+            }
+        })
+        res.status(200).json({message: "Task is incomplete", task: incompletedTask})
+    }catch(e){
+        console.error(e);
+        res.status(500).json({message: "Something went wrong"})
+    }
+    
+}
