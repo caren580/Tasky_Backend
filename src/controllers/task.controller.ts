@@ -134,7 +134,7 @@ export const deleteTask = async (req: Request, res: Response) => {
 
 }
 
-export const RestoreDeletedTask = async ( req: Request, res: Response) => {
+export const restoreDeletedTask = async ( req: Request, res: Response) => {
     const { id: userId } = req.user;
     const { id: taskId } = req.params;
     try {
@@ -149,6 +149,27 @@ export const RestoreDeletedTask = async ( req: Request, res: Response) => {
             }
         })
         res.status(200).json({message: "Task restored successfully", task: restoredTask})
+    }catch(e){
+        console.error(e);
+        res.status(500).json({message: "Something went wrong"})
+    }
+}
+
+export const completeTask = async (req: Request, res: Response) => {
+    const { id: userId } = req.user;
+    const { id: taskId } = req.params;
+    try {
+        const completedTask = await client.task.update({
+            where: {
+                id: taskId,
+                userId: userId,
+                isDeleted: false
+            },
+            data: {
+                isCompleted: true
+            }
+        })
+        res.status(200).json({message: "Task completed successfully", task: completedTask})
     }catch(e){
         console.error(e);
         res.status(500).json({message: "Something went wrong"})
