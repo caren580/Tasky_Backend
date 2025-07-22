@@ -133,3 +133,24 @@ export const deleteTask = async (req: Request, res: Response) => {
     }
 
 }
+
+export const RestoreDeletedTask = async ( req: Request, res: Response) => {
+    const { id: userId } = req.user;
+    const { id: taskId } = req.params;
+    try {
+        const restoredTask = await client.task.update({
+            where: {
+                id: taskId,
+                userId: userId,
+                isDeleted: true
+            },
+            data: {
+                isDeleted: false
+            }
+        })
+        res.status(200).json({message: "Task restored successfully", task: restoredTask})
+    }catch(e){
+        console.error(e);
+        res.status(500).json({message: "Something went wrong"})
+    }
+}
