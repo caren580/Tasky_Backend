@@ -102,3 +102,34 @@ export const updateTask = async (req: Request, res: Response) => {
         res.status(500).json({message: "Something went wrong"})
     }
 } 
+
+export const deleteTask = async (req: Request, res: Response) => {
+    const { id: userId} = req.user
+    const { id: taskId} = req.params;
+    try{
+        const existingTask = await client.task.findFirst({
+            where: {
+                id: taskId,
+                userId: userId,
+                isDeleted: false
+            }
+        })
+        if(!existingTask){
+            return res.status(404).json({message: "Task not found"})
+        }
+        const deleteTask = await client.task.update({
+            where:{
+                id: taskId
+            },
+            data: {
+                isDeleted: true
+            }
+            
+        })
+        res.status(200).json({message: "Task deleted successfully", task: deleteTask})
+    }catch(e){
+        console.error(e);
+        res.status(500).json({message: "Something went wrong"})
+    }
+
+}
