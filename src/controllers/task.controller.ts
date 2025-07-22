@@ -71,3 +71,34 @@ export const getSpecificTask = async (req: Request, res: Response) =>{
         res.status(500).json({message: "Something went wrong"})
     }
 }
+
+export const updateTask = async (req: Request, res: Response) => {
+    const {id: userId} = req.user;
+    const { id: taskId} = req.params;
+    const { title, description} = req.body;
+    try{
+        const existingTask = await client.task.findFirst({
+            where: {
+                id: taskId,
+                userId: userId,
+                isDeleted: false
+            }
+        })
+        if(!existingTask){
+            return res.status(404).json({message: "Task not found"})
+        }
+        const updatedTask = await client.task.update({
+            where: {
+                id: taskId
+            },
+            data: {
+                title,
+                description,
+            }
+        })
+        res.status(200).json({message: "Task updated successfully", task: updatedTask})
+    }catch(e){
+        console.error(e);
+        res.status(500).json({message: "Something went wrong"})
+    }
+} 
