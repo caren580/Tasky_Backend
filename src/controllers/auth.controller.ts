@@ -63,7 +63,7 @@ export const loginUser= async (req: Request, res: Response, next: NextFunction) 
       maxAge: 7 * 24 * 60 * 60 * 1000, 
     });
 
-    res.status(200).json({ userInfo });
+    res.status(200).json({ user:userInfo });
   } catch (e) {
     console.error(e);
     res.status(500).json({ message: "Something went wrong" });
