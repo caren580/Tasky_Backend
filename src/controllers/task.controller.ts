@@ -536,6 +536,8 @@ export const incompleteTask = async (req: Request, res: Response) => {
 
 export const permanentlyDeleteTask = async (req: Request, res: Response) => {
     const { id: userId } = req.user;
+    // const { id: userId } = req.user;
+
     const { id: taskId } = req.params;
     try {
         const existingTask = await client.task.findFirst({
