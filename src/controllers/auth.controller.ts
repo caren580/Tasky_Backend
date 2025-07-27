@@ -59,7 +59,7 @@ export const loginUser= async (req: Request, res: Response, next: NextFunction) 
     res.cookie("authToken", token, {
       httpOnly: true,
       sameSite: "lax", 
-      secure: false, 
+      secure: process.env.NODE_ENV === "production", 
       maxAge: 7 * 24 * 60 * 60 * 1000, 
     });
 
@@ -71,7 +71,7 @@ export const loginUser= async (req: Request, res: Response, next: NextFunction) 
 };
 
 export const logoutUser = (req: Request, res: Response, next: NextFunction) => {
-    res.clearCookie('AuthToken',{
+    res.clearCookie('authToken',{
     httpOnly: true,
     sameSite: "lax",
     secure: process.env.NODE_ENV === "production",
