@@ -37,9 +37,9 @@ app.use(cors({
 }));
 
 
-app.use('/api/auth', authRoutes);
-app.use('/api/tasks', taskRoutes);
-app.use('/api/user', userRoutes);
+app.use('/auth', authRoutes);
+app.use('/tasks', taskRoutes);
+app.use('/user', userRoutes);
 
 
 app.get('/', (req: Request, res: Response) => {
