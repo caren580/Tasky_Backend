@@ -1,9 +1,12 @@
 import express, {Express, Request, Response } from 'express';
 import cookieParser from "cookie-parser";
 import cors from 'cors';
+import dotenv from 'dotenv';
 import authRoutes from "./routes/auth.route"
 import taskRoutes from "./routes/task.route";
 import userRoutes from "./routes/user.route";
+
+dotenv.config();
 
 const app: Express = express();
 
@@ -18,12 +21,11 @@ app.use(cors({
     
     const allowedOrigins = [
       'http://localhost:5173',
-      // 'http://localhost:3000',
+      'http://localhost:3000',
       'https://tasky-frontend-ai9y.vercel.app',
       "https://tasky-frontend-s2mq-6tj5dpzqw-caren580s-projects.vercel.app",
-      // '*',
-      
-    ];
+      process.env.CORS_ORIGIN,
+    ].filter(Boolean);
     
     if (allowedOrigins.indexOf(origin) !== -1) {
       callback(null, true);
@@ -58,7 +60,7 @@ app.get('/health', (req: Request, res: Response) => {
 });
 
 
-const PORT = process.env.PORT || 3000; 
-app.listen(PORT, () => {
+const PORT = Number(process.env.PORT) || 3000; 
+app.listen(PORT, '0.0.0.0', () => {
   console.log(`Server is running on port ${PORT}`);
 });
