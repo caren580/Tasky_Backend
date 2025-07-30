@@ -58,7 +58,7 @@ export const loginUser= async (req: Request, res: Response, next: NextFunction) 
     const token = jwt.sign(userInfo, process.env.JWT_SECRET!);
     res.cookie("authToken", token, {
       httpOnly: true,
-      sameSite: "lax", 
+      sameSite: "none", 
       secure: process.env.NODE_ENV === "production", 
       maxAge: 7 * 24 * 60 * 60 * 1000, 
     });
@@ -73,7 +73,7 @@ export const loginUser= async (req: Request, res: Response, next: NextFunction) 
 export const logoutUser = (req: Request, res: Response, next: NextFunction) => {
     res.clearCookie('authToken',{
     httpOnly: true,
-    sameSite: "lax",
+    sameSite: "none",
     secure: process.env.NODE_ENV === "production",
   });
     res.status(200).json({message: "user logged out successfully"})
