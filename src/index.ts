@@ -18,7 +18,7 @@ app.use(cors({
     
     const allowedOrigins = [
       'http://localhost:5173',
-      'http://localhost:3000',
+      // 'http://localhost:3000',
       'https://tasky-frontend-ai9y.vercel.app',
       "https://tasky-frontend-s2mq-6tj5dpzqw-caren580s-projects.vercel.app",
       // '*',
